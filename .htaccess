@@ -1,0 +1,8 @@
+RewriteEngine On
+RewriteRule ^activation/([a-zA-Z0-9_-]+)$ activation.php?code=$1
+RewriteRule ^activation/([a-zA-Z0-9_-]+)/$ activation.php?code=$1
+RewriteRule ^([a-zA-Z0-9_-]+)/([0-9]+)$ $1.php?id=$2
+RewriteRule ^([a-zA-Z0-9_-]+)/([0-9]+)/$ $1.php?id=$2
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule .* index.php [L]
