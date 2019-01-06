@@ -13,7 +13,7 @@ class ORM
 
         if($id > -1) {
             $this->id = $id;
-            $sth = DB::getInstance()->prepare('SELECT * FROM '.$this::$table.' WHERE id='.$id);
+            $sth = DB::getInstance()->prepare('SELECT * FROM ' . $this::$table . ' WHERE id=' . $id);
             $sth->execute();
             $this->object = $sth->fetch(PDO::FETCH_OBJ);
         } else {
@@ -41,17 +41,18 @@ class ORM
 
     function save()
     {
+        $result = false;
         if(isset($this->id)) {
             $query = 'UPDATE `'.$this::$table.'` SET ';
             $values = [];
             foreach ($this->object as $key => $value)
             {
                 $query .= '`'.$key.'`=?,';
-                $values[] = $value;
+                $values[] = htmlspecialchars($value);
             }
             $query = rtrim($query,',').' WHERE id='.$this->id;
             $sth = DB::getInstance()->prepare($query);
-            $sth->execute($values);
+            $result = $sth->execute($values);
         } elseif (!empty($this->object)) {
             $query = 'INSERT INTO `'.$this::$table.'` (';
             $marks = '';
@@ -60,12 +61,13 @@ class ORM
             {
                 $query .= $key.',';
                 $marks .= '?,';
-                $params[] = $value;
+                $params[] = htmlspecialchars($value);;
             }
             $query = rtrim($query,',').') VALUES('.rtrim($marks,',').')';
             $sth = DB::getInstance()->prepare($query);
-            $sth->execute($params);
+            $result = $sth->execute($params);
         }
+        return $result;
     }
 
     function remove()
@@ -137,6 +139,14 @@ class ORM
             return $this;
         }
         return false;
+    }
+
+    function getRowsCount()
+    {
+        $this->_queryOptions['select'][] = 'count(*) as count';
+        $result = $this->getRows();
+        array_pop($this->_queryOptions['select']);
+        return $result[0]->count;
     }
 
     function execute()

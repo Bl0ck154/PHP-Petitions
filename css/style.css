@@ -1,12 +1,9 @@
 body {
-    background: floralwhite;
-    margin: 10px;
+    background: #fffffe;
 }
-.myForm {
-    padding: 20px;
+.h5 {
+    margin-bottom: -10%;
 }
-img {
-    max-width: 100%;
-    height: auto;
-    vertical-align: middle;
+header {
+    margin-bottom: 10px;
 }

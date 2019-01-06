@@ -47,6 +47,8 @@ class Router{
 
         $path = 'controllers/'.$controller.'.php';
 
+        $params = array_filter($params, function($value) { return $value !== ''; }); // remove empty values
+
         if(file_exists($path))
         {
             require $path;
